@@ -1,0 +1,41 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_DRIVER: ${DB_DRIVER}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    ports:
+      - ${RUST_PORT}:${RUST_PORT}
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    tty: true
+
+  db:
+    image: mysql:8
+    command: --log-bin-trust-function-creators=1
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    platform: linux/arm64
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - db:/var/lib/mysql
+
+networks:
+  rust-mysql-docker:
+    driver: bridge
+
+volumes:
+  db:

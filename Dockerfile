@@ -17,7 +17,7 @@ COPY ./Cargo.lock ./Cargo.lock
 RUN mkdir src/
 RUN echo "fn main() {}" > src/main.rs
 RUN cargo build
-RUN rm -rf ./target/debug/.fingerprint/payment-*
+RUN rm -rf ./target/debug/.fingerprint/{プロジェクト名}-*
 COPY ./src ./src
 
 FROM common AS dev
@@ -28,5 +28,5 @@ RUN rustup component add clippy
 # RUN cargo build --release
 
 # FROM debian:buster-slim as prod
-# COPY --from=builder /app/target/release/payment /usr/local/bin/payment
-# CMD ["payment"]
+# COPY --from=builder /app/target/release/{プロジェクト名} /usr/local/bin/{プロジェクト名}
+# CMD ["{プロジェクト名}"]
